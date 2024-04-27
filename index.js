@@ -82,6 +82,13 @@ async function run() {
       const result = await touristSpotCollection.updateOne(filter, tourSpot, options);
       res.send(result)
     })
+
+    app.delete("/touristSpot/:id", async(req, res)=> {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await touristSpotCollection.deleteOne(query);
+      res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

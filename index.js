@@ -31,7 +31,7 @@ async function run() {
       const cursor = touristSpotCollection.find();
       const result = await cursor.toArray();
       res.send(result)
-    })
+    })    
 
     app.get("/touristSpot/:id", async(req, res)=> {
       const id = req.params.id;
@@ -46,6 +46,18 @@ async function run() {
       const result = await touristSpotCollection.insertOne(newSpot)
       res.send(result)
     })
+
+    app.get("/myList", async(req, res) => {
+      const cursor = touristSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+    app.get("/myList/:email", async(req, res)=> {
+      const query = {user_email:req.params.email};
+      const result = await touristSpotCollection.find(query).toArray();
+      res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

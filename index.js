@@ -32,7 +32,9 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     })
+
     
+
     app.post("/touristSpot", async (req, res) => {
       const newSpot = req.body;
       console.log(newSpot)

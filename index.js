@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
@@ -24,6 +24,21 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const touristSpotCollection = client.db("touristSpotDB").collection("touristSpot");
+
+    app.get("/touristSpot", async(req, res) => {
+      const cursor = touristSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+    
+    app.post("/touristSpot", async (req, res) => {
+      const newSpot = req.body;
+      console.log(newSpot)
+      const result = await touristSpotCollection.insertOne(newSpot)
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -36,9 +51,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Tourism Management Server Running')
+  res.send('Tourism Management Server Running')
 })
 
 app.listen(port, () => {
-    console.log(`Tourism Management Server listening on port ${port}`)
+  console.log(`Tourism Management Server listening on port ${port}`)
 })

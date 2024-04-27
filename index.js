@@ -27,18 +27,18 @@ async function run() {
 
     const touristSpotCollection = client.db("touristSpotDB").collection("touristSpot");
 
-    app.get("/touristSpot", async(req, res) => {
+    app.get("/touristSpot", async (req, res) => {
       const cursor = touristSpotCollection.find();
       const result = await cursor.toArray();
       res.send(result)
-    })    
+    })
 
-    app.get("/touristSpot/:id", async(req, res)=> {
+    app.get("/touristSpot/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await touristSpotCollection.findOne(query);
       res.send(result)
-  })
+    })
 
     app.post("/touristSpot", async (req, res) => {
       const newSpot = req.body;
@@ -47,17 +47,41 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/myList", async(req, res) => {
+    app.get("/myList", async (req, res) => {
       const cursor = touristSpotCollection.find();
       const result = await cursor.toArray();
       res.send(result)
     })
 
-    app.get("/myList/:email", async(req, res)=> {
-      const query = {user_email:req.params.email};
+    app.get("/myList/:email", async (req, res) => {
+      const query = { user_email: req.params.email };
       const result = await touristSpotCollection.find(query).toArray();
       res.send(result)
-  })
+    })
+
+    app.put("/touristSpot/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedSpot = req.body;
+      const tourSpot = {
+        $set: {
+          tourists_spot_name: updatedSpot.tourists_spot_name,
+          country_Name: updatedSpot.country_Name,
+          location: updatedSpot.location,
+          average_cost: updatedSpot.average_cost,
+          seasonality: updatedSpot.seasonality,
+          travel_time: updatedSpot.travel_time,
+          totaVisitorsPerYear: updatedSpot.totaVisitorsPerYear,
+          short_description: updatedSpot.short_description,
+          image: updatedSpot.image,
+          user_name: updatedSpot.user_name,
+          user_email: updatedSpot.user_email,
+        }
+      }
+      const result = await touristSpotCollection.updateOne(filter, tourSpot, options);
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

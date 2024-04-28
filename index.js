@@ -26,6 +26,7 @@ async function run() {
     await client.connect();
 
     const touristSpotCollection = client.db("touristSpotDB").collection("touristSpot");
+    const countryCollection = client.db("touristSpotDB").collection("country");
 
     app.get("/touristSpot", async (req, res) => {
       const cursor = touristSpotCollection.find();
@@ -88,6 +89,13 @@ async function run() {
       const query = {_id: new ObjectId(id)};
       const result = await touristSpotCollection.deleteOne(query);
       res.send(result)
+  })
+
+  app.post("/countryList", async (req, res) => {
+    const newCountry = req.body;
+    console.log(newCountry)
+    const result = await countryCollection.insertOne(newCountry)
+    res.send(result)
   })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

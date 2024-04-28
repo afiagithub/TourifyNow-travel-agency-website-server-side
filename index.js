@@ -91,6 +91,12 @@ async function run() {
       res.send(result)
   })
 
+  app.get("/countryList", async (req, res) => {
+    const cursor = countryCollection.find();
+    const result = await cursor.toArray();
+    res.send(result)
+  })
+
   app.post("/countryList", async (req, res) => {
     const newCountry = req.body;
     console.log(newCountry)
